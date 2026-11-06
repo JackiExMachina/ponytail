@@ -68,34 +68,30 @@ This is a report the user asked for, so give it in full.
 
 ## 4. Output
 
-Very simple English: short sentences, everyday words. Explain a technical
-term the first time you use it. The reader may never have seen this code.
+Language: Russian (Живой, простой, ясный русский язык без канцелярита и лишнего пафоса). Все заголовки и выводы давать по-русски.
+Технические термины объяснять простыми словами сразу при первом упоминании. Читатель может впервые видеть этот код.
 
-Start with `What this change does:` in two or three sentences.
+Начать с `Что делает это изменение:` в двух-трёх простых предложениях.
 
-Then the findings in three groups, skip empty groups:
-- **Must fix:** bug, security, data loss, breaks at the expected load.
-- **Should fix:** risky code without a test, real slowness, duplication, a
-  function that mixes jobs, code that should not exist.
-- **Nice to have:** small speed-ups, shorter forms.
+Затем находки в трёх группах, от самых важных к мелким (пустые группы пропускать):
+- **Критично (Must fix):** баг, дыра в безопасности, потеря данных, сломается под реальной нагрузкой.
+- **Надо поправить (Should fix):** рискованный новый код без тестов, реальные тормоза, дублирование, функция смешивает задачи, код которого не должно быть.
+- **Мелочи (Nice to have):** мелкие ускорения, более компактная запись.
 
-Number findings across all groups, so the user can say "fix 2 and 5".
-Every finding has all four parts, each one or two short sentences:
+Сквозная нумерация по всем группам.
+У каждой находки строго 4 части, по 1-2 коротких предложения:
 
-2. **Orders land on the wrong day** (`billing/close_day.py:L40-52`)
-   - **What this is:** At midnight this job closes the day and bills all orders of that day.
-   - **Problem:** It takes "today" from the server clock, which runs in UTC. An order placed
-     at 00:30 in Berlin is billed on the day before.
-   - **Fix:** Compute the day once in the shop's time zone:
-     `datetime.now(ZoneInfo("Europe/Berlin")).date()`. One line, nothing else changes.
-   - **If we skip it:** Late orders show the wrong date, and accounting fixes them by hand.
+2. **Заказы попадают не в тот день** (`billing/close_day.py:L40-52`)
+   - **В чём суть:** В полночь задача закрывает день и выставляет счета за все заказы этого дня.
+   - **Проблема:** Берёт "сегодня" по системным часам сервера (UTC). Заказ в 00:30 по Берлину запишется во вчерашний день.
+   - **Решение:** Брать дату в часовом поясе магазина: `datetime.now(ZoneInfo("Europe/Berlin")).date()`. Одна строка.
+   - **Если проигнорировать:** Ночные заказы получат неверную дату, бухгалтерия будет чинить руками.
 
-End with:
-- `Verdict: Ship.` or `Verdict: fix 1 and 3 first.`
-- `Lean: -<N> lines possible.` when lean findings exist.
-- `Not checked:` one line, if something mattered and you could not check it.
+Завершать:
+- `Вердикт: В прод.` или `Вердикт: Сначала исправь 1 и 3.`
+- `Экономия: -<N> строк.` если есть что сократить.
+- `Не проверялось:` одна строка, если что-то важное не удалось проверить.
 
-Nothing found: `What this change does:`, then `Looks good. Ship.` and one line
-on what you checked.
+Если всё чисто: `Что делает это изменение:`, затем `Выглядит отлично. В прод.` и строка о том, что проверено.
 
 Lists findings, changes no code.

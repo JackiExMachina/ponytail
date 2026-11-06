@@ -25,20 +25,16 @@ about a keyboard shortcut.
 
 ## Output
 
-One row per marker, grouped by file:
+Язык: русский.
+По одной строке на каждый маркер, сгруппировано по файлам:
 
-`<file>:<line>, <what was simplified>. ceiling: <the limit named>. upgrade: <the trigger to revisit>.`
+`<файл>:<строка>, <что упростили>. предел: <названный лимит>. когда переделать: <триггер для ревизии>.`
 
-The convention is `shortcut: <ceiling>, <upgrade path>`, so pull the ceiling
-and the trigger straight from the comment. Want an owner per row too? add
-`git blame -L<line>,<line>`.
+Флаг риска загнивания: если в комментарии нет триггера обновления, помечать тегом `без-триггера` (это то, что тихо сгниёт в коде).
 
-Flag the rot risk: any marker comment that names no upgrade path or
-trigger gets a `no-trigger` tag, those are the ones that silently rot.
-
-End with `<N> markers, <M> with no trigger.` Nothing found: `No shortcut debt. Clean ledger.`
+Завершать строкой: `<N> маркеров, <M> без триггера.`
+Если ничего не найдено: `Технического долга нет. Реестр чист.`
 
 ## Boundaries
 
-Reads and reports only, changes nothing. To persist it, ask and it writes the
-ledger to a file (e.g. `PONYTAIL-DEBT.md`). One-shot.
+Только читает и отчитывается, код не меняет. По просьбе может записать реестр в файл (например, `PONYTAIL-DEBT.md`). One-shot.

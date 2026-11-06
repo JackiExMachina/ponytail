@@ -68,36 +68,30 @@ tested and fixed later. This is a report the user asked for, so give it in full.
 
 ## 4. Output
 
-Very simple English: short sentences, everyday words. Explain a technical
-term the first time you use it. The reader may never have seen this code.
+Language: Russian (Живой, простой, ясный русский язык без канцелярита и лишнего пафоса). Все заголовки и выводы давать по-русски.
+Технические термины объяснять простыми словами сразу при первом упоминании. Читатель может впервые видеть этот код.
 
-Start with `What this repo does:` in two or three sentences, and the load
-you assumed.
+Начать с `Что делает этот репозиторий:` в двух-трёх простых предложениях, и какую нагрузку ты предполагал.
 
-Then the findings in three groups, most important first, skip empty groups:
-- **Must fix:** bug, security, data loss, breaks at the expected load.
-- **Should fix:** risky code without a test, real slowness, duplication, a
-  function that mixes jobs, code that should not exist.
-- **Nice to have:** small speed-ups, shorter forms.
+Затем находки в трёх группах, от самых важных к мелким (пустые группы пропускать):
+- **Критично (Must fix):** баги, дыры в безопасности, потеря данных, сломается под реальной нагрузкой.
+- **Надо поправить (Should fix):** рискованный код без тестов, реальные тормоза, дублирование, функция делает несколько чужих дел, код которого вообще не должно быть.
+- **Мелочи (Nice to have):** мелкие ускорения, более компактная запись.
 
-Number findings across all groups, so the user can say "fix 2 and 5". At
-most 20 findings; if you left smaller ones out, say how many.
-Every finding has all four parts, each one or two short sentences:
+Сквозная нумерация по всем группам, чтобы можно было сказать «поправь 2 и 5». Не больше 20 находок.
+У каждой находки строго 4 части, по 1-2 коротких предложения:
 
-2. **Orders land on the wrong day** (`billing/close_day.py:L40-52`)
-   - **What this is:** At midnight this job closes the day and bills all orders of that day.
-   - **Problem:** It takes "today" from the server clock, which runs in UTC. An order placed
-     at 00:30 in Berlin is billed on the day before.
-   - **Fix:** Compute the day once in the shop's time zone:
-     `datetime.now(ZoneInfo("Europe/Berlin")).date()`. One line, nothing else changes.
-   - **If we skip it:** Late orders show the wrong date, and accounting fixes them by hand.
+2. **Заказы попадают не в тот день** (`billing/close_day.py:L40-52`)
+   - **В чём суть:** В полночь задача закрывает день и выставляет счета за все заказы этого дня.
+   - **Проблема:** Берёт "сегодня" по системным часам сервера (UTC). Заказ в 00:30 по Берлину запишется во вчерашний день.
+   - **Решение:** Брать дату в часовом поясе магазина: `datetime.now(ZoneInfo("Europe/Berlin")).date()`. Одна строка.
+   - **Если проигнорировать:** Ночные заказы получат неверную дату, бухгалтерия будет чинить руками.
 
-End with:
-- `Verdict:` one line: healthy, or what to fix first.
-- `Lean: -<N> lines, -<M> dependencies possible.` when lean findings exist.
-- `Not checked:` the parts you did not read or could not run.
+Завершать:
+- `Вердикт:` одна строка: всё чисто, или что чинить в первую очередь.
+- `Экономия: -<N> строк, -<M> зависимостей.` если есть что сократить.
+- `Не проверялось:` что именно не читалось или не запускалось.
 
-Nothing found: `What this repo does:`, then `Healthy. Nothing to fix.` and
-one line on what you checked.
+Если всё чисто: `Что делает этот репозиторий:`, затем `Всё чисто. Править нечего.` и одна строка о том, что проверено.
 
 One-shot report, changes no code.
